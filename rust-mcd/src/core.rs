@@ -188,6 +188,15 @@ impl<'a> Core<'a> {
         }
     }
 
+    pub fn stop(&self) -> anyhow::Result<()> {
+        let result = unsafe { MCD_LIB.mcd_stop_f(self.core.as_ptr(), 0) };
+        if result != 0 {
+            Err(expect_error(Some(self))).with_context(|| "Internal library reported an error")
+        } else {
+            Ok(())
+        }
+    }
+
     pub fn step(&self) -> anyhow::Result<()> {
         let step_type = MCD_CORE_STEP_TYPE_INSTR as u32;
 
